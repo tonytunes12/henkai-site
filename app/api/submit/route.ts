@@ -25,17 +25,26 @@ export async function POST(req: NextRequest) {
 
     // If Google Sheet URL is configured, forward the data
     if (GOOGLE_SHEET_URL) {
-      const sheetRes = await fetch(GOOGLE_SHEET_URL, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ xUsername, discordUsername, walletAddress, timestamp }),
-      });
-      if (!sheetRes.ok) {
-        console.error("Google Sheet error:", await sheetRes.text());
-        return NextResponse.json({ error: "Failed to write to sheet" }, { status: 500 });
+      console.log("🔗 Sending to Google Sheets:", GOOGLE_SHEET_URL);
+      try {
+        const sheetRes = await fetch(GOOGLE_SHEET_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ xUsername, discordUsername, walletAddress, timestamp }),
+        });
+        console.log("📊 Sheet Response Status:", sheetRes.status);
+        if (!sheetRes.ok) {
+          const errorText = await sheetRes.text();
+          console.error("❌ Google Sheet error:", errorText);
+          return NextResponse.json({ error: "Failed to write to sheet", details: errorText }, { status: 500 });
+        }
+        console.log("✅ Data sent to Google Sheets successfully");
+      } catch (fetchErr) {
+        console.error("❌ Fetch error:", fetchErr);
+        return NextResponse.json({ error: "Network error connecting to sheet", details: String(fetchErr) }, { status: 500 });
       }
     } else {
-      // Log locally until sheet is connected
+      console.log("⚠️ GOOGLE_SHEET_URL not configured");
       console.log("📝 New Henkai Entry:", { xUsername, discordUsername, walletAddress, timestamp });
     }
 

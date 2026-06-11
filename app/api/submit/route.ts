@@ -39,8 +39,8 @@ export async function POST(req: NextRequest) {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(payload),
           }),
-          new Promise((_, reject) => setTimeout(() => reject(new Error("Timeout")), 5000))
-        ]);
+          new Promise<Response>((_, reject) => setTimeout(() => reject(new Error("Timeout")), 5000))
+        ]) as Response;
 
         console.log("📊 Sheet Response Status:", sheetRes.status);
         const responseText = await sheetRes.text();

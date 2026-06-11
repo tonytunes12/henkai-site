@@ -31,6 +31,8 @@ export async function POST(req: NextRequest) {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ xUsername, discordUsername, walletAddress, timestamp }),
+          mode: "cors",
+          credentials: "omit",
         });
         console.log("📊 Sheet Response Status:", sheetRes.status);
         if (!sheetRes.ok) {

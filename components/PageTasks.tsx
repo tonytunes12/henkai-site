@@ -4,14 +4,12 @@ import { useState } from "react";
 // ─── LINKS — paste your URLs here when ready ───────────────────
 const HENKAI_X_URL   = "https://x.com/HENKAIworld";
 const POST_URL       = "#"; // e.g. https://x.com/HenkaiOfficial/status/123...
-const DISCORD_URL    = "https://discord.gg/GjMe6VwmQk";
 // ────────────────────────────────────────────────────────────────
 
 type TaskState = {
   followHenkai:  boolean;
   likedPost:     boolean;
   retweeted:     boolean;
-  joinedDiscord: boolean;
 };
 
 type FormState = {
@@ -28,7 +26,6 @@ export default function PageTasks({ onNext }: { onNext: (data: { xUsername: stri
     followHenkai:  false,
     likedPost:     false,
     retweeted:     false,
-    joinedDiscord: false,
   });
 
   const [form, setForm] = useState<FormState>({ xUsername: "", discordUsername: "", comment: "", qrtLink: "" });
@@ -100,13 +97,6 @@ export default function PageTasks({ onNext }: { onNext: (data: { xUsername: stri
       title: "ポストをリツイート",
       linkLabel: "リツイート ↗",
       href: POST_URL,
-    },
-    {
-      key: "joinedDiscord" as keyof TaskState,
-      icon: "💜",
-      title: "Discordサーバーに参加",
-      linkLabel: "Discordに参加 ↗",
-      href: DISCORD_URL,
     },
   ];
 

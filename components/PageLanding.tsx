@@ -134,45 +134,7 @@ export default function PageLanding({ onNext, onViewAbout }: { onNext: () => voi
         >
           𝕏
         </a>
-
-        {/* Discord Link */}
-        <a
-          href="https://discord.gg/GjMe6VwmQk"
-          target="_blank"
-          rel="noopener noreferrer"
-          title="Join our Discord"
-          style={{
-            display: "inline-flex",
-            alignItems: "center",
-            justifyContent: "center",
-            width: 44,
-            height: 44,
-            borderRadius: "50%",
-            background: "linear-gradient(135deg, rgba(168,85,247,0.15), rgba(123,47,255,0.1))",
-            border: "1px solid rgba(168,85,247,0.4)",
-            cursor: "pointer",
-            transition: "all 0.3s ease",
-            textDecoration: "none",
-            padding: 8,
-            boxSizing: "border-box",
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.background = "linear-gradient(135deg, rgba(168,85,247,0.3), rgba(123,47,255,0.2))";
-            e.currentTarget.style.boxShadow = "0 0 20px rgba(168,85,247,0.4)";
-            e.currentTarget.style.transform = "translateY(-2px)";
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.background = "linear-gradient(135deg, rgba(168,85,247,0.15), rgba(123,47,255,0.1))";
-            e.currentTarget.style.boxShadow = "none";
-            e.currentTarget.style.transform = "translateY(0)";
-          }}
-        >
-          <img
-            src="/discord.svg"
-            alt="Discord"
-            style={{ width: "100%", height: "100%", filter: "brightness(0) saturate(100%) invert(82%) sepia(29%) saturate(745%) hue-rotate(238%) brightness(103%)" }}
-          />
-        </a>      </div>
+      </div>
 
       <CitySkyline />
     </div>

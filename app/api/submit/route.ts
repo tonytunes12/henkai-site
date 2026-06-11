@@ -23,36 +23,47 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Invalid Ethereum address" }, { status: 400 });
     }
 
+    // Log the entry
+    console.log("📝 New Henkai Entry:", { xUsername, discordUsername, walletAddress, timestamp });
+
     // If Google Sheet URL is configured, forward the data
     if (GOOGLE_SHEET_URL) {
       console.log("🔗 Sending to Google Sheets:", GOOGLE_SHEET_URL);
       try {
-        const sheetRes = await fetch(GOOGLE_SHEET_URL, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ xUsername, discordUsername, walletAddress, timestamp }),
-          mode: "cors",
-          credentials: "omit",
-        });
+        const payload = { xUsername, discordUsername, walletAddress, timestamp };
+        console.log("📤 Payload:", JSON.stringify(payload));
+        
+        const sheetRes = await Promise.race([
+          fetch(GOOGLE_SHEET_URL, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload),
+          }),
+          new Promise((_, reject) => setTimeout(() => reject(new Error("Timeout")), 5000))
+        ]);
+
         console.log("📊 Sheet Response Status:", sheetRes.status);
+        const responseText = await sheetRes.text();
+        console.log("📋 Sheet Response:", responseText);
+
         if (!sheetRes.ok) {
-          const errorText = await sheetRes.text();
-          console.error("❌ Google Sheet error:", errorText);
-          return NextResponse.json({ error: "Failed to write to sheet", details: errorText }, { status: 500 });
+          console.error("❌ Google Sheet error:", responseText);
+          return NextResponse.json({ error: "Failed to write to sheet", details: responseText }, { status: 500 });
         }
         console.log("✅ Data sent to Google Sheets successfully");
       } catch (fetchErr) {
-        console.error("❌ Fetch error:", fetchErr);
-        return NextResponse.json({ error: "Network error connecting to sheet", details: String(fetchErr) }, { status: 500 });
+        console.error("❌ Fetch error:", String(fetchErr));
+        console.error("Full error:", fetchErr);
+        // Still return success locally since we logged it
+        return NextResponse.json({ success: true, note: "Logged locally, sheet sync failed" });
       }
     } else {
-      console.log("⚠️ GOOGLE_SHEET_URL not configured");
-      console.log("📝 New Henkai Entry:", { xUsername, discordUsername, walletAddress, timestamp });
+      console.log("⚠️ GOOGLE_SHEET_URL not configured - logging locally only");
     }
 
     return NextResponse.json({ success: true });
   } catch (err) {
     console.error("Submit error:", err);
-    return NextResponse.json({ error: "Server error" }, { status: 500 });
+    return NextResponse.json({ error: "Server error", details: String(err) }, { status: 500 });
   }
 }

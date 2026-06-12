@@ -3,7 +3,7 @@ import { useState } from "react";
 
 // ─── LINKS — paste your URLs here when ready ───────────────────
 const HENKAI_X_URL   = "https://x.com/HENKAIworld";
-const POST_URL       = "#"; // e.g. https://x.com/HenkaiOfficial/status/123...
+const POST_URL       = "https://x.com/HENKAIworld/status/2065495213649313978";
 // ────────────────────────────────────────────────────────────────
 
 type TaskState = {
